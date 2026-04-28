@@ -13,6 +13,14 @@
 - [netlify.toml](file://netlify.toml)
 </cite>
 
+## Update Summary
+**Changes Made**
+- Updated to reflect modern Vite build system integration
+- Enhanced component architecture documentation with ErrorBoundary pattern
+- Added comprehensive hook-driven state management analysis
+- Documented professional development practices and SPA routing
+- Updated build configuration and deployment pipeline documentation
+
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
@@ -25,29 +33,27 @@
 9. [Conclusion](#conclusion)
 
 ## Introduction
-This document describes the technical architecture of Bridge Fixer, a React-based single-page application designed to help users recover bridged deposits through a ChainDefuser service. The system follows a clean separation of concerns:
-- UI components driven by React hooks for state management
-- An API layer that encapsulates RPC communication with ChainDefuser
-- Validation utilities for multi-chain address formats and input sanitization
-- A minimal build and deployment pipeline using Vite and Netlify
+This document describes the technical architecture of Bridge Fixer, a modern React-based single-page application designed to help users recover bridged deposits through a ChainDefuser service. The system follows a clean separation of concerns with professional development practices:
 
-The application implements observable patterns for real-time polling, factory-like API functions for RPC calls, and a straightforward routing strategy suitable for a SPA.
+- **Modern Build System**: Vite-powered development server with React Fast Refresh and production builds
+- **Component-Based Architecture**: React functional components with hook-driven state management
+- **Professional Error Handling**: ErrorBoundary pattern for graceful error recovery
+- **API Layer Pattern**: Factory-style RPC communication with ChainDefuser service
+- **Validation Utilities**: Comprehensive multi-chain address format validation
+- **SPA Routing**: Netlify-based deployment with client-side routing support
+
+The application implements observable patterns for real-time polling, factory-like API functions for RPC calls, and follows React best practices with proper state management and lifecycle handling.
 
 ## Project Structure
-The project is organized into a small, focused set of modules:
-- Entry point initializes the React root and mounts the App component
-- App component orchestrates UI, state, and orchestration of API calls
-- API module encapsulates RPC communication with ChainDefuser
-- Validation utilities provide cross-chain address validation and status checks
-- Styles define responsive UI and status indicators
-- Build and deployment configuration support SPA routing and static hosting
+The project is organized into a modern, scalable architecture with clear separation of concerns:
 
 ```mermaid
 graph TB
 Browser["Browser Runtime"] --> HTML["index.html"]
 HTML --> RootDiv["#root element"]
 RootDiv --> MainJS["src/main.jsx"]
-MainJS --> App["src/App.jsx"]
+MainJS --> ErrorBoundary["ErrorBoundary Component"]
+ErrorBoundary --> App["src/App.jsx"]
 App --> API["src/api/bridge.js"]
 App --> Utils["src/utils/validation.js"]
 App --> CSS["src/App.css"]
@@ -55,61 +61,64 @@ API --> RPC["ChainDefuser RPC Endpoint"]
 ```
 
 **Diagram sources**
-- [index.html:1-13](file://index.html#L1-L13)
-- [src/main.jsx:1-11](file://src/main.jsx#L1-L11)
-- [src/App.jsx:1-373](file://src/App.jsx#L1-L373)
-- [src/api/bridge.js:1-72](file://src/api/bridge.js#L1-L72)
+- [index.html:1-14](file://index.html#L1-L14)
+- [src/main.jsx:1-13](file://src/main.jsx#L1-L13)
+- [src/App.jsx:458-489](file://src/App.jsx#L458-L489)
+- [src/App.jsx:97-456](file://src/App.jsx#L97-L456)
+- [src/api/bridge.js:1-86](file://src/api/bridge.js#L1-L86)
 - [src/utils/validation.js:1-49](file://src/utils/validation.js#L1-L49)
-- [src/App.css:1-303](file://src/App.css#L1-L303)
+- [src/App.css:1-309](file://src/App.css#L1-L309)
 
 **Section sources**
-- [index.html:1-13](file://index.html#L1-L13)
-- [src/main.jsx:1-11](file://src/main.jsx#L1-L11)
-- [src/App.jsx:1-373](file://src/App.jsx#L1-L373)
-- [src/api/bridge.js:1-72](file://src/api/bridge.js#L1-L72)
+- [index.html:1-14](file://index.html#L1-L14)
+- [src/main.jsx:1-13](file://src/main.jsx#L1-L13)
+- [src/App.jsx:97-456](file://src/App.jsx#L97-L456)
+- [src/api/bridge.js:1-86](file://src/api/bridge.js#L1-L86)
 - [src/utils/validation.js:1-49](file://src/utils/validation.js#L1-L49)
-- [src/App.css:1-303](file://src/App.css#L1-L303)
-- [package.json:1-20](file://package.json#L1-L20)
+- [src/App.css:1-309](file://src/App.css#L1-L309)
+- [package.json:1-21](file://package.json#L1-L21)
 - [vite.config.js:1-7](file://vite.config.js#L1-L7)
-- [netlify.toml:1-9](file://netlify.toml#L1-L9)
+- [netlify.toml:1-16](file://netlify.toml#L1-L16)
 
 ## Core Components
-- App component: Central orchestrator managing form state, loading states, error/success messaging, and real-time polling. It renders child components for status badges and deposit rows, and exposes action handlers for fetching addresses, checking deposits, and fixing deposits.
-- API module: Provides a factory-style RPC client and named functions for supported tokens, deposit address, recent deposits, deposit notifications, and withdrawal status.
-- Validation utilities: Offer chain-aware address validation, account ID validation, transaction hash validation, and a predicate to determine whether a deposit can be fixed based on status.
-- UI helpers: Presentational components for status badges and individual deposit rows, styled via App.css.
 
-Key architectural characteristics:
-- Hook-driven state management: useState, useEffect, useRef, and useCallback are used extensively for local state, lifecycle, timers, and memoization.
-- Single-page application: SPA routing is handled by Netlify’s redirect rule to serve index.html for all routes.
-- Minimal external dependencies: Only React and ReactDOM are required; build tooling is Vite with React plugin.
+### Application Architecture
+- **App Component**: Central orchestrator managing form state, loading states, error/success messaging, and real-time polling. Renders child components for status badges and deposit rows, exposing action handlers for fetching addresses, checking deposits, and fixing deposits.
+- **ErrorBoundary**: Professional error handling component that catches runtime errors and provides graceful degradation
+- **API Module**: Factory-style RPC client providing named functions for supported tokens, deposit address, recent deposits, deposit notifications, and withdrawal status
+- **Validation Utilities**: Chain-aware address validation, account ID validation, transaction hash validation, and predicates for determining fix eligibility
+- **UI Components**: Presentational components for status badges and individual deposit rows with comprehensive styling
+
+### Key Architectural Characteristics
+- **Hook-Driven State Management**: Extensive use of useState, useEffect, useRef, and useCallback for local state, lifecycle management, timers, and memoization
+- **Single-Page Application**: SPA routing handled by Netlify's redirect rules to serve index.html for all routes
+- **Modern Build Pipeline**: Vite-based development server with React Fast Refresh and optimized production builds
+- **Professional Dependencies**: React 18.3.1 with concurrent features, React DOM for rendering, and minimal external dependencies
 
 **Section sources**
-- [src/App.jsx:53-373](file://src/App.jsx#L53-L373)
-- [src/api/bridge.js:5-72](file://src/api/bridge.js#L5-L72)
+- [src/App.jsx:97-456](file://src/App.jsx#L97-L456)
+- [src/App.jsx:458-489](file://src/App.jsx#L458-L489)
+- [src/api/bridge.js:6-86](file://src/api/bridge.js#L6-L86)
 - [src/utils/validation.js:1-49](file://src/utils/validation.js#L1-L49)
 
 ## Architecture Overview
-The system follows a layered architecture:
-- Presentation Layer: App component and presentational components
-- Domain Orchestration: App component coordinates user actions and manages polling
-- API Layer: RPC client and named API functions
-- Validation Layer: Utility functions for input sanitization
-- Persistence/State: React hooks manage ephemeral UI state
+The system follows a layered architecture with modern React patterns and professional development practices:
 
 ```mermaid
 graph TB
 subgraph "Presentation Layer"
-AppComp["App.jsx<br/>App component"]
-StatusBadge["App.jsx<br/>StatusBadge component"]
-DepositRow["App.jsx<br/>DepositRow component"]
+AppComp["App.jsx<br/>Main Application Component"]
+ErrorBound["ErrorBoundary<br/>Error Handling"]
+StatusBadge["App.jsx<br/>StatusBadge Component"]
+DepositRow["App.jsx<br/>DepositRow Component"]
 end
 subgraph "Domain Orchestration"
 AppHooks["App.jsx<br/>useState/useEffect/useRef/useCallback"]
-Polling["App.jsx<br/>Real-time polling"]
+Polling["App.jsx<br/>Real-time Polling Mechanism"]
+ErrorHandling["App.jsx<br/>Error State Management"]
 end
 subgraph "API Layer"
-RPCClient["src/api/bridge.js<br/>bridgeRpc()"]
+RPCClient["src/api/bridge.js<br/>bridgeRpc() Factory"]
 APISupport["src/api/bridge.js<br/>fetchSupportedTokens()"]
 APIAddr["src/api/bridge.js<br/>fetchDepositAddress()"]
 APIDeposits["src/api/bridge.js<br/>fetchRecentDeposits()"]
@@ -122,10 +131,17 @@ ValAcc["src/utils/validation.js<br/>validateAccountId()"]
 ValTx["src/utils/validation.js<br/>validateTxHash()"]
 CanFix["src/utils/validation.js<br/>canFixDeposit()"]
 end
+subgraph "Build & Deployment"
+ViteDev["vite.config.js<br/>Development Server"]
+ViteProd["Vite Build<br/>Production Optimization"]
+Netlify["netlify.toml<br/>SPA Routing"]
+end
 AppComp --> AppHooks
+AppComp --> ErrorBound
 AppComp --> StatusBadge
 AppComp --> DepositRow
 AppComp --> Polling
+AppComp --> ErrorHandling
 AppComp --> APISupport
 AppComp --> APIAddr
 AppComp --> APIDeposits
@@ -139,124 +155,154 @@ APIAddr --> RPCClient
 APIDeposits --> RPCClient
 APINotify --> RPCClient
 APIWithdraw --> RPCClient
+ViteDev --> AppComp
+ViteProd --> AppComp
+Netlify --> ViteProd
 ```
 
 **Diagram sources**
-- [src/App.jsx:18-51](file://src/App.jsx#L18-L51)
-- [src/App.jsx:53-373](file://src/App.jsx#L53-L373)
-- [src/api/bridge.js:5-72](file://src/api/bridge.js#L5-L72)
+- [src/App.jsx:97-456](file://src/App.jsx#L97-L456)
+- [src/App.jsx:458-489](file://src/App.jsx#L458-L489)
+- [src/api/bridge.js:6-86](file://src/api/bridge.js#L6-L86)
 - [src/utils/validation.js:1-49](file://src/utils/validation.js#L1-L49)
+- [vite.config.js:1-7](file://vite.config.js#L1-L7)
+- [netlify.toml:12-16](file://netlify.toml#L12-L16)
 
 ## Detailed Component Analysis
 
-### App Component and State Management
-The App component is a React functional component that:
-- Declares and manages multiple pieces of state for forms, loading, errors, success messages, and polling
-- Implements lifecycle hooks to load supported chains on mount and to clean up polling timers on unmount
-- Encapsulates three primary workflows:
-  - Fetch deposit address
-  - Check recent deposits
-  - Fix deposit by notifying ChainDefuser and starting polling
-- Uses a polling mechanism with configurable interval and timeout to observe deposit status changes
+### Modern React Application Architecture
+The App component serves as a comprehensive React functional component that demonstrates modern React patterns:
+
+- **State Management**: Multiple state variables for different UI contexts (chains, deposits, loading states, errors)
+- **Lifecycle Management**: useEffect for initialization and cleanup, useCallback for stable function references
+- **Error Boundary Integration**: Professional error handling with graceful fallback UI
+- **Form Handling**: Controlled components with validation and conditional rendering
+- **Conditional Logic**: Dynamic form fields based on chain selection (NEAR sender account, Stellar memo)
 
 ```mermaid
 sequenceDiagram
-participant U as "User"
+participant U as "User Interface"
+participant EB as "ErrorBoundary"
 participant A as "App Component"
-participant V as "Validation"
+participant V as "Validation Layer"
 participant API as "API Module"
 participant S as "ChainDefuser RPC"
-U->>A : "Click Fix Deposit"
-A->>V : "validateAccountId()"
-V-->>A : "validation result"
-A->>V : "validateAddress()"
-V-->>A : "validation result"
-A->>V : "validateTxHash()"
-V-->>A : "validation result"
-alt "validations pass"
-A->>API : "notifyDeposit(chain, address, txHash)"
-API->>S : "RPC notify_deposit"
-S-->>API : "result"
-API-->>A : "result"
-A->>A : "startPolling(interval, timeout)"
-loop "every 5s"
-A->>API : "fetchRecentDeposits(accountId, chain)"
-API->>S : "RPC recent_deposits"
-S-->>API : "deposits"
-API-->>A : "deposits"
-A->>A : "check status and update state"
-end
-else "validation fails"
-A-->>U : "show error message"
-end
+U->>EB : "Render Application"
+EB->>A : "Pass children"
+A->>A : "Load supported chains"
+A->>API : "fetchSupportedTokens()"
+API->>S : "RPC supported_tokens"
+S-->>API : "Chain data"
+API-->>A : "Chain list"
+A->>A : "Initialize state"
+U->>A : "User Action"
+A->>V : "Input validation"
+V-->>A : "Validation results"
+A->>API : "API call with parameters"
+API->>S : "RPC request"
+S-->>API : "Response data"
+API-->>A : "Processed result"
+A->>A : "Update state and UI"
 ```
 
 **Diagram sources**
-- [src/App.jsx:148-216](file://src/App.jsx#L148-L216)
-- [src/api/bridge.js:59-65](file://src/api/bridge.js#L59-L65)
-- [src/utils/validation.js:32-44](file://src/utils/validation.js#L32-L44)
+- [src/App.jsx:124-151](file://src/App.jsx#L124-L151)
+- [src/App.jsx:198-273](file://src/App.jsx#L198-L273)
+- [src/api/bridge.js:40-85](file://src/api/bridge.js#L40-L85)
+- [src/utils/validation.js:1-49](file://src/utils/validation.js#L1-L49)
 
 **Section sources**
-- [src/App.jsx:53-114](file://src/App.jsx#L53-L114)
-- [src/App.jsx:116-146](file://src/App.jsx#L116-L146)
-- [src/App.jsx:148-216](file://src/App.jsx#L148-L216)
+- [src/App.jsx:97-151](file://src/App.jsx#L97-L151)
+- [src/App.jsx:153-196](file://src/App.jsx#L153-L196)
+- [src/App.jsx:198-273](file://src/App.jsx#L198-L273)
 
-### API Layer Pattern (RPC Communication)
-The API module implements a factory-like RPC client:
-- A shared RPC client function handles JSON-RPC envelopes, request IDs, and error propagation
-- Named functions wrap the RPC client with method-specific parameter shaping
-- Exposes functions for supported tokens, deposit address, recent deposits, deposit notifications, and withdrawal status
+### Advanced Error Handling Pattern
+The ErrorBoundary component implements professional error handling:
+
+- **Class Component Pattern**: Traditional React class component with lifecycle methods
+- **Error Detection**: Static method to detect errors in child component trees
+- **Graceful Degradation**: User-friendly error message with reload functionality
+- **Integration**: Wrapped around the main App component for comprehensive coverage
 
 ```mermaid
 flowchart TD
-Start(["Call API Function"]) --> BuildParams["Build Method and Params"]
-BuildParams --> CallRPC["bridgeRpc(method, params)"]
-CallRPC --> PostReq["POST to RPC endpoint"]
-PostReq --> RespOK{"Response OK?"}
-RespOK --> |No| ThrowHTTP["Throw HTTP error"]
-RespOK --> |Yes| ParseJSON["Parse JSON"]
-ParseJSON --> HasError{"Has RPC error?"}
-HasError --> |Yes| ThrowRPC["Throw RPC error"]
-HasError --> |No| ReturnResult["Return result"]
+Start(["Component Mount"]) --> Normal["Normal Operation"]
+Normal --> ChildError{"Child Error Occurs?"}
+ChildError --> |Yes| ErrorState["Set hasError=true"]
+ErrorState --> Fallback["Render Error UI"]
+Fallback --> Reload["User Clicks Reload"]
+Reload --> Reset["Reset State"]
+Reset --> Normal
+ChildError --> |No| Normal
+```
+
+**Diagram sources**
+- [src/App.jsx:458-489](file://src/App.jsx#L458-L489)
+
+**Section sources**
+- [src/App.jsx:458-489](file://src/App.jsx#L458-L489)
+
+### API Layer Pattern (Factory-Style RPC Communication)
+The API module implements a sophisticated factory-style RPC client:
+
+- **Shared RPC Client**: bridgeRpc() function handles JSON-RPC envelopes, request IDs, and error propagation
+- **Timeout Management**: Built-in request timeout with AbortController for network reliability
+- **Method-Specific Wrappers**: Named functions with parameter shaping for different RPC endpoints
+- **Error Handling**: Comprehensive error handling for HTTP and RPC errors
+
+```mermaid
+flowchart TD
+Start(["API Function Call"]) --> BuildParams["Build Method and Parameters"]
+BuildParams --> CreateController["Create AbortController"]
+CreateController --> SetTimeout["Set Request Timeout"]
+SetTimeout --> SendRequest["POST to RPC Endpoint"]
+SendRequest --> ResponseOK{"HTTP Response OK?"}
+ResponseOK --> |No| ThrowHTTP["Throw HTTP Error"]
+ResponseOK --> |Yes| ParseJSON["Parse JSON Response"]
+ParseJSON --> HasError{"RPC Error Present?"}
+HasError --> |Yes| ThrowRPC["Throw RPC Error"]
+HasError --> |No| ReturnResult["Return Result"]
 ThrowHTTP --> End(["End"])
 ThrowRPC --> End
 ReturnResult --> End
 ```
 
 **Diagram sources**
-- [src/api/bridge.js:5-31](file://src/api/bridge.js#L5-L31)
+- [src/api/bridge.js:6-38](file://src/api/bridge.js#L6-L38)
 
 **Section sources**
-- [src/api/bridge.js:5-72](file://src/api/bridge.js#L5-L72)
+- [src/api/bridge.js:6-86](file://src/api/bridge.js#L6-L86)
 
 ### Validation Utilities (Multi-chain Address Formats)
-The validation module enforces chain-aware input rules:
-- Address validation supports EVM (checksummed), TRON, and BTC (legacy and Bech32) prefixes
-- Account ID and transaction hash validations ensure non-empty inputs
-- A predicate determines whether a deposit can be fixed based on its status
+The validation module provides comprehensive input validation:
+
+- **Chain-Aware Validation**: Different validation rules for EVM, TRON, and BTC addresses
+- **Input Sanitization**: Trim and validation of user inputs
+- **Predicate Functions**: canFixDeposit() determines eligibility for deposit fixing
+- **Comprehensive Coverage**: Validates account IDs, transaction hashes, and chain-specific addresses
 
 ```mermaid
 flowchart TD
-Start(["validateAddress(address, chain)"]) --> CheckEmpty{"Address empty?"}
-CheckEmpty --> |Yes| ReqErr["Return 'required' error"]
-CheckEmpty --> |No| CheckChain{"Chain family?"}
-CheckChain --> |EVM| EVMSpecs["Check 0x prefix and length"]
-CheckChain --> |TRON| TronSpecs["Check T prefix"]
-CheckChain --> |BTC| BTCSpecs["Check 1/3/bc1 prefix"]
-EVMSpecs --> ValidEVM{"Valid?"}
-TronSpecs --> ValidTron{"Valid?"}
-BTCSpecs --> ValidBTC{"Valid?"}
-ValidEVM --> |No| ErrEVM["Return EVM error"]
-ValidTron --> |No| ErrTron["Return TRON error"]
-ValidBTC --> |No| ErrBTC["Return BTC error"]
-ValidEVM --> |Yes| Ok["Return null"]
-ValidTron --> |Yes| Ok
-ValidBTC --> |Yes| Ok
-ReqErr --> End(["End"])
-ErrEVM --> End
-ErrTron --> End
-ErrBTC --> End
-Ok --> End
+Start(["validateAddress(address, chain)"]) --> CheckEmpty{"Address Empty?"}
+CheckEmpty --> |Yes| ReturnRequired["Return 'required' error"]
+CheckEmpty --> |No| CheckChain{"Chain Family"}
+CheckChain --> |EVM| CheckEVM["0x prefix + 42 chars"]
+CheckChain --> |TRON| CheckTRON["Starts with T"]
+CheckChain --> |BTC| CheckBTC["Starts with 1/3/bc1"]
+CheckEVM --> EVMValid{"Valid EVM?"}
+CheckTRON --> TRONValid{"Valid TRON?"}
+CheckBTC --> BTCValid{"Valid BTC?"}
+EVMValid --> |No| ReturnEVM["Return EVM error"]
+EVMValid --> |Yes| ReturnNull["Return null"]
+TRONValid --> |No| ReturnTRON["Return TRON error"]
+TRONValid --> |Yes| ReturnNull
+BTCValid --> |No| ReturnBTC["Return BTC error"]
+BTCValid --> |Yes| ReturnNull
+ReturnRequired --> End(["End"])
+ReturnEVM --> End
+ReturnTRON --> End
+ReturnBTC --> End
+ReturnNull --> End
 ```
 
 **Diagram sources**
@@ -266,86 +312,141 @@ Ok --> End
 - [src/utils/validation.js:1-49](file://src/utils/validation.js#L1-L49)
 
 ### Component Relationships and Data Flow
-- App component composes presentational components (StatusBadge, DepositRow) and orchestrates API calls
-- Data flows from user input through validation to API functions, then updates UI state and polling
-- StatusBadge reflects normalized status values; DepositRow renders tabular deposit entries
-- CSS defines styles for cards, buttons, status badges, and responsive layout
+The application demonstrates sophisticated component relationships and data flow patterns:
 
 ```mermaid
 graph LR
-App["App.jsx"] --> SB["StatusBadge (presentational)"]
-App --> DR["DepositRow (presentational)"]
-App --> VA["validateAddress()"]
-App --> VACC["validateAccountId()"]
-App --> VT["validateTxHash()"]
-App --> CF["canFixDeposit()"]
-App --> API["API Functions"]
-API --> RPC["bridgeRpc()"]
-App --> CSS["App.css"]
+App["App.jsx<br/>Main Component"] --> EB["ErrorBoundary<br/>Error Handling"]
+App --> SB["StatusBadge<br/>Presentational"]
+App --> DR["DepositRow<br/>Presentational"]
+App --> VA["validateAddress()<br/>Validation"]
+App --> VACC["validateAccountId()<br/>Validation"]
+App --> VT["validateTxHash()<br/>Validation"]
+App --> CF["canFixDeposit()<br/>Validation"]
+App --> API["API Functions<br/>Factory Pattern"]
+API --> RPC["bridgeRpc()<br/>RPC Client"]
+App --> CSS["App.css<br/>Styling"]
+App --> Hooks["React Hooks<br/>State Management"]
 ```
 
 **Diagram sources**
-- [src/App.jsx:18-51](file://src/App.jsx#L18-L51)
-- [src/App.jsx:30-51](file://src/App.jsx#L30-L51)
-- [src/App.jsx:53-373](file://src/App.jsx#L53-L373)
-- [src/api/bridge.js:5-72](file://src/api/bridge.js#L5-L72)
+- [src/App.jsx:60-95](file://src/App.jsx#L60-L95)
+- [src/App.jsx:97-456](file://src/App.jsx#L97-L456)
+- [src/api/bridge.js:6-86](file://src/api/bridge.js#L6-L86)
 - [src/utils/validation.js:1-49](file://src/utils/validation.js#L1-L49)
 - [src/App.css:140-236](file://src/App.css#L140-L236)
 
 **Section sources**
-- [src/App.jsx:18-51](file://src/App.jsx#L18-L51)
-- [src/App.jsx:30-51](file://src/App.jsx#L30-L51)
-- [src/App.jsx:53-373](file://src/App.jsx#L53-L373)
+- [src/App.jsx:60-95](file://src/App.jsx#L60-L95)
+- [src/App.jsx:97-456](file://src/App.jsx#L97-L456)
 - [src/App.css:140-236](file://src/App.css#L140-L236)
 
 ## Dependency Analysis
-- Runtime dependencies: React and ReactDOM
-- Build dependencies: Vite and @vitejs/plugin-react
-- SPA routing: Netlify redirects all routes to index.html
+The project follows modern dependency management practices:
+
+### Runtime Dependencies
+- **React 18.3.1**: Latest React with concurrent features and improved performance
+- **React DOM 18.3.1**: DOM rendering capabilities for React applications
+- **ES Modules**: Native ES module support for modern JavaScript features
+
+### Development Dependencies  
+- **Vite 6.0.0**: Next-generation frontend tooling with fast dev server and optimized builds
+- **@vitejs/plugin-react 4.3.4**: Official React plugin for Vite with automatic JSX transform
+- **Fast Refresh**: Hot module replacement for instant feedback during development
+
+### Build and Deployment Pipeline
+- **SPA Routing**: Netlify redirects all routes to index.html for client-side routing
+- **Security Headers**: X-Frame-Options, X-Content-Type-Options, and Referrer-Policy headers
+- **Production Optimization**: Vite's production build with tree-shaking and minification
 
 ```mermaid
 graph TB
-Pkg["package.json"] --> React["react"]
-Pkg --> ReactDOM["react-dom"]
-ViteCfg["vite.config.js"] --> Plugin["@vitejs/plugin-react"]
-Netlify["netlify.toml"] --> Redirect["SPA redirect to /index.html"]
+Pkg["package.json<br/>Dependency Management"] --> React["react@^18.3.1"]
+Pkg --> ReactDOM["react-dom@^18.3.1"]
+Pkg --> Vite["vite@^6.0.0"]
+Pkg --> VitePlugin["@vitejs/plugin-react@^4.3.4"]
+ViteCfg["vite.config.js<br/>Build Configuration"] --> Plugin["@vitejs/plugin-react"]
+ViteCfg --> DevServer["Development Server"]
+ViteCfg --> ProdBuild["Production Build"]
+Netlify["netlify.toml<br/>Deployment Config"] --> BuildCmd["npm run build"]
+Netlify --> SPA["SPA Redirects"]
+Netlify --> Security["Security Headers"]
 ```
 
 **Diagram sources**
-- [package.json:11-18](file://package.json#L11-L18)
-- [vite.config.js:4-6](file://vite.config.js#L4-L6)
-- [netlify.toml:5-8](file://netlify.toml#L5-L8)
+- [package.json:11-19](file://package.json#L11-L19)
+- [vite.config.js:1-7](file://vite.config.js#L1-L7)
+- [netlify.toml:1-16](file://netlify.toml#L1-L16)
 
 **Section sources**
-- [package.json:1-20](file://package.json#L1-L20)
+- [package.json:1-21](file://package.json#L1-L21)
 - [vite.config.js:1-7](file://vite.config.js#L1-L7)
-- [netlify.toml:1-9](file://netlify.toml#L1-L9)
+- [netlify.toml:1-16](file://netlify.toml#L1-L16)
 
 ## Performance Considerations
-- Polling cadence and timeout: The polling interval is set to a fixed duration with a timeout to prevent indefinite loops. Consider making these configurable via environment variables or settings for flexibility.
-- Debouncing and caching: For frequent user interactions (e.g., typing in inputs), consider debouncing API calls to reduce network overhead.
-- Rendering optimization: Memoize derived values and use stable callbacks to minimize re-renders. The existing useCallback usage for stop/start polling is a good pattern.
-- Network reliability: The API layer throws on HTTP or RPC errors; ensure callers handle these gracefully to avoid blocking the UI.
+
+### Modern Build System Benefits
+- **Vite Development Server**: Lightning-fast hot module replacement and instant server start
+- **Tree Shaking**: Automatic dead code elimination in production builds
+- **Code Splitting**: Optimized bundle splitting for better loading performance
+- **ES Module Support**: Native ES modules for better optimization
+
+### Application-Level Optimizations
+- **Polling Management**: Configurable intervals with timeout protection to prevent resource exhaustion
+- **Memoization**: useCallback for stable function references in event handlers
+- **Conditional Rendering**: Dynamic component rendering based on chain selection reduces unnecessary DOM nodes
+- **State Optimization**: Separate state variables prevent unnecessary re-renders across different UI sections
+
+### Network Performance
+- **Request Timeouts**: 30-second timeout prevents hanging requests
+- **AbortController**: Proper cancellation of network requests on component unmount
+- **Error Boundaries**: Prevent cascading failures and improve user experience
 
 ## Troubleshooting Guide
-Common issues and remedies:
-- RPC errors: The RPC client throws on HTTP errors or RPC errors; catch and surface user-friendly messages in the App component.
-- Validation failures: Address, account ID, and transaction hash validations return specific errors; display these messages to guide users.
-- Polling timeouts: If polling exceeds the configured timeout, the timer is stopped and an error message is shown; users can retry manually.
-- SPA routing: Ensure Netlify redirects are configured so deep links render index.html; otherwise, refreshes or direct navigation may fail.
+
+### Common Issues and Solutions
+
+#### Build and Development Issues
+- **Vite Dev Server Problems**: Ensure Node.js version compatibility and check port availability
+- **Hot Reload Not Working**: Verify @vitejs/plugin-react installation and check browser console for errors
+- **Import Errors**: Ensure ES module syntax and proper file extensions (.jsx)
+
+#### Runtime Application Issues
+- **RPC Errors**: The bridgeRpc() function throws on HTTP or RPC errors; implement proper error handling in calling components
+- **Validation Failures**: Address, account ID, and transaction hash validations return specific errors; display user-friendly messages
+- **Polling Timeouts**: If polling exceeds 60 seconds, automatically stops and shows error message; users can retry manually
+- **SPA Routing Issues**: Ensure Netlify redirects are configured correctly so deep links render index.html
+
+#### Error Boundary Behavior
+- **Application Crashes**: ErrorBoundary component catches errors and displays friendly error message with reload option
+- **State Reset**: On reload, application state is reset to initial values
 
 **Section sources**
-- [src/api/bridge.js:20-31](file://src/api/bridge.js#L20-L31)
-- [src/App.jsx:103-114](file://src/App.jsx#L103-L114)
-- [src/App.jsx:121-145](file://src/App.jsx#L121-L145)
-- [netlify.toml:5-8](file://netlify.toml#L5-L8)
+- [src/api/bridge.js:27-38](file://src/api/bridge.js#L27-L38)
+- [src/App.jsx:172-196](file://src/App.jsx#L172-L196)
+- [src/App.jsx:116-118](file://src/App.jsx#L116-L118)
+- [netlify.toml:12-16](file://netlify.toml#L12-L16)
+- [src/App.jsx:458-489](file://src/App.jsx#L458-L489)
 
 ## Conclusion
-Bridge Fixer employs a clean, modular architecture:
-- React hooks drive state and lifecycle management
-- A factory-style RPC client encapsulates ChainDefuser communication
-- Validation utilities enforce multi-chain address correctness
-- A SPA design with Netlify redirects ensures seamless navigation
-- The App component orchestrates user workflows, polling, and UI updates
+Bridge Fixer exemplifies modern React application architecture with professional development practices:
 
-This structure enables maintainability, testability, and scalability while keeping the UI responsive and user-friendly.
+### Technical Excellence
+- **Modern Build System**: Vite provides fast development experience with optimized production builds
+- **Clean Architecture**: Clear separation of concerns between presentation, domain, API, and validation layers
+- **Professional Error Handling**: ErrorBoundary pattern ensures graceful error recovery
+- **Hook-Driven State Management**: Comprehensive use of React hooks for optimal state management
+- **SPA Best Practices**: Proper routing configuration with Netlify for seamless navigation
+
+### Scalability and Maintainability
+- **Component Modularity**: Well-defined components with single responsibilities
+- **API Abstraction**: Factory pattern for RPC communication simplifies API usage
+- **Validation Layer**: Comprehensive input validation ensures data integrity
+- **Performance Optimization**: Modern build tools and React best practices for optimal performance
+
+### Developer Experience
+- **Fast Development**: Vite's hot module replacement provides instant feedback
+- **Type Safety**: ES modules and modern JavaScript features improve code quality
+- **Professional Standards**: Error boundaries, proper error handling, and security headers demonstrate enterprise-grade development practices
+
+This architecture enables maintainability, testability, and scalability while providing a responsive, user-friendly interface for deposit recovery operations.

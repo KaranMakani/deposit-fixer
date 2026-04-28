@@ -12,6 +12,15 @@
 - [vite.config.js](file://vite.config.js)
 </cite>
 
+## Update Summary
+**Changes Made**
+- Updated App component documentation to reflect the new 489-line implementation with enhanced functionality
+- Added comprehensive coverage of the new ErrorBoundary component
+- Enhanced polling mechanism documentation with improved timeout handling
+- Updated helper components documentation with expanded chain support
+- Added new form validation features for NEAR and Stellar networks
+- Updated architecture diagrams to reflect the complete component hierarchy
+
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
@@ -24,141 +33,179 @@
 9. [Conclusion](#conclusion)
 
 ## Introduction
-This document describes the React component architecture of Bridge Fixer, focusing on the main App component and its helper components. It explains state management with React hooks, component lifecycle patterns, UI composition, form validation, card-based layout, responsive design, accessibility considerations, component communication, and error handling. The goal is to help developers understand how the application works and how to extend or maintain it effectively.
+This document describes the React component architecture of Bridge Fixer, a comprehensive deposit recovery tool for NEAR Intents. The application has undergone a significant migration to a modern React architecture featuring enhanced functionality, improved error handling, and sophisticated polling mechanisms. The main App component orchestrates state management, UI composition, API interactions, and user workflows for deposit recovery across multiple blockchain networks.
 
 ## Project Structure
-The application is a Vite-powered React single-page app with a minimal file structure:
-- Entry point renders the App component and applies global styles.
-- App component orchestrates state, UI, and API interactions.
-- Utility modules encapsulate API calls and validation logic.
-- Styles are centralized in a single CSS file with responsive breakpoints.
+The application is a Vite-powered React single-page application with a well-structured modular architecture:
+- Entry point renders the App component wrapped in an ErrorBoundary and applies global styles
+- App component serves as the central orchestrator with comprehensive state management
+- Utility modules encapsulate API calls and validation logic for different blockchain networks
+- Styles are centralized in a single CSS file with responsive design and accessibility features
+- Error boundaries provide robust error handling and recovery mechanisms
 
 ```mermaid
 graph TB
 Browser["Browser Runtime"] --> RootDiv["index.html #root"]
 RootDiv --> MainJSX["src/main.jsx"]
-MainJSX --> AppJSX["src/App.jsx"]
+MainJSX --> ErrorBoundary["ErrorBoundary Component"]
+ErrorBoundary --> AppJSX["src/App.jsx"]
 AppJSX --> ValidationJS["src/utils/validation.js"]
 AppJSX --> BridgeJS["src/api/bridge.js"]
 AppJSX --> AppCSS["src/App.css"]
 ```
 
 **Diagram sources**
-- [index.html:8-10](file://index.html#L8-L10)
-- [main.jsx:6-10](file://src/main.jsx#L6-L10)
-- [App.jsx:1-14](file://src/App.jsx#L1-L14)
+- [index.html:8-12](file://index.html#L8-L12)
+- [main.jsx:6-12](file://src/main.jsx#L6-L12)
+- [App.jsx:458-489](file://src/App.jsx#L458-L489)
 - [validation.js:1-49](file://src/utils/validation.js#L1-L49)
-- [bridge.js:1-72](file://src/api/bridge.js#L1-L72)
-- [App.css:1-303](file://src/App.css#L1-L303)
+- [bridge.js:1-86](file://src/api/bridge.js#L1-L86)
+- [App.css:1-309](file://src/App.css#L1-L309)
 
 **Section sources**
-- [index.html:1-13](file://index.html#L1-L13)
-- [main.jsx:1-11](file://src/main.jsx#L1-L11)
-- [package.json:1-20](file://package.json#L1-L20)
+- [index.html:1-14](file://index.html#L1-L14)
+- [main.jsx:1-13](file://src/main.jsx#L1-L13)
+- [package.json:1-21](file://package.json#L1-L21)
 - [vite.config.js:1-7](file://vite.config.js#L1-L7)
 
 ## Core Components
-This section documents the main App component and its helper components, including props, state, rendering logic, and styling.
+This section documents the main App component and its enhanced helper components, including props, state, rendering logic, and styling.
 
-- App (default export)
-  - Purpose: Central orchestration of UI, state, API calls, and user interactions.
-  - Hooks used:
-    - useState: Manages form inputs, lists, flags, and messages.
-    - useEffect: Handles initialization and cleanup of polling timers.
-    - useRef: Stores polling timer and start time references.
-    - useCallback: Memoizes stop/start polling functions to prevent unnecessary re-renders.
-  - Lifecycle patterns:
-    - Loads supported chains on mount.
-    - Starts and stops polling for recent deposits with timeout.
-    - Cleans up timers on unmount.
-  - Props: None (no external props passed).
-  - Rendering logic:
-    - Renders a header, a form section, optional status card, action buttons, messages, and a results table.
-    - Uses helper components for status badges and row rendering.
-  - Styling: Uses card-based layout with consistent spacing and typography from App.css.
+### App Component (Enhanced)
+- **Purpose**: Central orchestration of UI, state, API calls, and user interactions for deposit recovery
+- **Hooks used**:
+  - useState: Manages comprehensive form inputs, lists, flags, and messages
+  - useEffect: Handles initialization, polling cleanup, and component lifecycle
+  - useRef: Stores polling timer and start time references
+  - useCallback: Memoizes stop/start polling functions and event handlers
+- **Lifecycle patterns**:
+  - Loads supported chains on mount with comprehensive error handling
+  - Implements sophisticated polling mechanism with timeout and retry logic
+  - Provides automatic cleanup of timers and resources
+- **Props**: None (no external props passed)
+- **Rendering logic**:
+  - Renders comprehensive header, form section with conditional inputs
+  - Displays status cards, action buttons with dynamic states
+  - Shows detailed results table with enhanced formatting
+  - Integrates error boundary for robust error handling
+- **Enhanced Features**:
+  - Supports 48+ blockchain networks with custom chain labels
+  - Implements specialized validation for NEAR and Stellar networks
+  - Provides real-time polling with visual feedback
+  - Includes comprehensive error handling and user feedback
 
-- StatusBadge (helper)
-  - Purpose: Render a status indicator with a label and color-coded badge.
-  - Props:
-    - status: String representing the deposit status (e.g., NOT_FOUND, PENDING, CREDITED, COMPLETED, FAILED).
-  - Styling classes:
-    - Base class: status-badge
-    - Variant classes: status-not-found, status-pending, status-completed, status-unknown
-  - Rendering logic:
-    - Selects label and variant class based on status mapping.
-    - Falls back to Unknown label if status is missing.
+### StatusBadge (Enhanced Helper)
+- **Purpose**: Render a status indicator with comprehensive color-coded badges
+- **Props**:
+  - status: String representing the deposit status (NOT_FOUND, PENDING, CREDITED, COMPLETED, FAILED)
+- **Enhanced Styling classes**:
+  - Base class: status-badge
+  - Variant classes: status-not-found, status-pending, status-completed, status-unknown
+- **Rendering logic**:
+  - Maps status to comprehensive labels and variant classes
+  - Provides fallback handling for unknown statuses
+  - Uses consistent color schemes for visual status indication
 
-- DepositRow (helper)
-  - Purpose: Render a single row in the recent deposits table.
-  - Props:
-    - deposit: Object containing fields like amount, decimals, defuse_asset_identifier, created_at, status, chain, tx_hash.
-  - Rendering logic:
-    - Formats amount to fixed decimals and token identifier shortening.
-    - Displays status via StatusBadge.
-    - Truncates long transaction hashes with ellipsis and tooltip via title attribute.
-    - Converts timestamps to local time strings.
+### DepositRow (Enhanced Helper)
+- **Purpose**: Render a single row in the recent deposits table with enhanced formatting
+- **Props**:
+  - deposit: Object containing amount, decimals, defuse_asset_identifier, created_at, status, chain, tx_hash
+- **Enhanced Rendering logic**:
+  - Formats amounts with decimal precision and token identifier truncation
+  - Displays status via enhanced StatusBadge component
+  - Provides tooltip support for long transaction hashes
+  - Converts timestamps to localized time strings
+  - Includes chain label formatting with ID display
+
+### ErrorBoundary (New Component)
+- **Purpose**: Provide robust error handling and recovery for the entire application
+- **Features**:
+  - Catches and handles JavaScript errors in the component tree
+  - Displays user-friendly error messages with recovery options
+  - Provides automatic page reload functionality
+  - Maintains application stability during unexpected errors
 
 **Section sources**
-- [App.jsx:53-372](file://src/App.jsx#L53-L372)
-- [App.jsx:18-28](file://src/App.jsx#L18-L28)
-- [App.jsx:30-51](file://src/App.jsx#L30-L51)
+- [App.jsx:97-456](file://src/App.jsx#L97-L456)
+- [App.jsx:60-70](file://src/App.jsx#L60-L70)
+- [App.jsx:72-95](file://src/App.jsx#L72-L95)
+- [App.jsx:458-489](file://src/App.jsx#L458-L489)
 
 ## Architecture Overview
-The App component follows a unidirectional data flow:
-- State is declared locally and updated by event handlers.
-- Validation helpers enforce preconditions before API calls.
-- API module abstracts RPC requests to the bridge service.
-- UI updates trigger side effects (polling) and render messages.
+The enhanced App component follows a sophisticated unidirectional data flow with comprehensive error handling:
+- State is declared locally with comprehensive management of form inputs and UI states
+- Validation helpers enforce strict preconditions before API calls
+- API module abstracts RPC requests to the bridge service with timeout handling
+- Enhanced polling mechanism provides real-time status updates
+- Error boundary component ensures application resilience
+- UI updates trigger side effects with proper cleanup and resource management
 
 ```mermaid
 graph TB
-subgraph "UI Layer"
+subgraph "Enhanced UI Layer"
 App["App.jsx"]
 StatusBadge["StatusBadge.jsx"]
 DepositRow["DepositRow.jsx"]
+ErrorBoundary["ErrorBoundary.jsx"]
 end
-subgraph "Validation"
+subgraph "Enhanced Validation"
 Validation["validation.js"]
 end
-subgraph "API"
+subgraph "Robust API Layer"
 Bridge["bridge.js"]
 end
-subgraph "Styling"
+subgraph "Comprehensive Styling"
 Styles["App.css"]
+end
+subgraph "Network Layer"
+RPC["RPC Endpoint"]
+Timeout["Request Timeout"]
 end
 App --> Validation
 App --> Bridge
 App --> StatusBadge
 App --> DepositRow
+App --> ErrorBoundary
 App --> Styles
+Bridge --> RPC
+Bridge --> Timeout
 ```
 
 **Diagram sources**
-- [App.jsx:1-14](file://src/App.jsx#L1-L14)
+- [App.jsx:1-456](file://src/App.jsx#L1-L456)
 - [validation.js:1-49](file://src/utils/validation.js#L1-L49)
-- [bridge.js:1-72](file://src/api/bridge.js#L1-L72)
-- [App.css:1-303](file://src/App.css#L1-L303)
+- [bridge.js:1-86](file://src/api/bridge.js#L1-L86)
+- [App.css:1-309](file://src/App.css#L1-L309)
 
 ## Detailed Component Analysis
 
-### App Component Analysis
-Key aspects:
-- State management
-  - Form inputs: accountId, chain, depositAddress, txHash.
-  - Lists and flags: chains, deposits, loading flags, fixing flag, fetchingAddress flag, polling flag.
-  - Messages: error, success.
-  - References: pollTimerRef, pollStartRef.
-- Lifecycle and side effects
-  - On mount, loads supported chains and sets loading state.
-  - Polling loop checks recent deposits periodically until completion or failure, with a timeout.
-  - Cleanup clears intervals on unmount.
-- Event handlers
-  - handleFetchAddress: validates account ID and chain, fetches deposit address, updates success/error messages.
-  - handleCheckDeposit: validates inputs, fetches recent deposits, updates list and checked flag.
-  - handleFixDeposit: validates inputs, notifies deposit, starts polling, and updates success message.
-- Computed values
-  - overallStatus: derived from matched deposit or NOT_FOUND when checked.
-  - fixAllowed: computed via canFixDeposit based on overallStatus.
+### Enhanced App Component Analysis
+Key aspects of the comprehensive implementation:
+
+#### State Management
+- **Form inputs**: accountId, chain, depositAddress, txHash, nearSenderAccount, stellarMemo
+- **Lists and flags**: chains, deposits, loading states, fixing flag, fetchingAddress flag, polling flag
+- **Messages**: error, success with comprehensive feedback
+- **References**: pollTimerRef, pollStartRef for polling management
+- **Chain support**: Comprehensive mapping for 48+ blockchain networks
+
+#### Lifecycle and Enhanced Side Effects
+- **Initialization**: Loads supported chains with Set-based deduplication and sorting
+- **Polling mechanism**: Sophisticated interval-based checking with 60-second timeout
+- **Resource cleanup**: Automatic timer cleanup on component unmount
+- **Error handling**: Comprehensive try-catch blocks with user feedback
+
+#### Enhanced Event Handlers
+- **handleFetchAddress**: Validates inputs, handles NEAR/Stellar special cases, provides loading states
+- **handleCheckDeposit**: Comprehensive deposit listing with error handling
+- **handleFixDeposit**: Advanced deposit notification with extra parameters for NEAR/Stellar
+- **startPolling**: Intelligent polling with status detection and automatic stopping
+- **stopPolling**: Graceful timer management with cleanup
+
+#### Enhanced Computed Values
+- **overallStatus**: Dynamic status determination with comprehensive matching
+- **fixAllowed**: Enhanced validation logic for deposit fixing eligibility
+- **Chain labeling**: Custom labels with chain ID display for user clarity
 
 ```mermaid
 sequenceDiagram
@@ -166,249 +213,282 @@ participant U as "User"
 participant A as "App.jsx"
 participant V as "validation.js"
 participant B as "bridge.js"
-U->>A : "Click Fetch Address"
-A->>V : "validateAccountId(accountId)"
-V-->>A : "error or null"
-A->>B : "fetchDepositAddress(accountId, chain)"
-B-->>A : "address or error"
-A-->>U : "success or error message"
-```
-
-**Diagram sources**
-- [App.jsx:148-170](file://src/App.jsx#L148-L170)
-- [validation.js:32-37](file://src/utils/validation.js#L32-L37)
-- [bridge.js:41-46](file://src/api/bridge.js#L41-L46)
-
-```mermaid
-sequenceDiagram
-participant U as "User"
-participant A as "App.jsx"
-participant B as "bridge.js"
-participant P as "Polling Loop"
 U->>A : "Click Fix Deposit"
-A->>B : "notifyDeposit(chain, depositAddress, txHash)"
-B-->>A : "success"
-A->>P : "startPolling()"
-loop Every 5s
-P->>B : "fetchRecentDeposits(accountId, chain)"
-B-->>P : "deposits"
-P->>A : "update deposits, stop if completed/failed"
+A->>V : "validateAccountId, validateAddress, validateTxHash"
+V-->>A : "Validation results"
+A->>B : "notifyDeposit(chain, address, txHash, extraParams)"
+B-->>A : "Success response"
+A->>A : "startPolling()"
+loop Every 5s (with 60s timeout)
+A->>B : "fetchRecentDeposits(accountId, chain)"
+B-->>A : "Updated deposits"
+A->>A : "Check status (COMPLETED/CREDITED/FAILED)"
+A->>A : "Stop polling if complete"
 end
-A-->>U : "success or error message"
+A-->>U : "Success/failure message"
 ```
 
 **Diagram sources**
-- [App.jsx:194-216](file://src/App.jsx#L194-L216)
-- [bridge.js:48-57](file://src/api/bridge.js#L48-L57)
-- [App.jsx:116-146](file://src/App.jsx#L116-L146)
+- [App.jsx:244-273](file://src/App.jsx#L244-L273)
+- [App.jsx:166-196](file://src/App.jsx#L166-L196)
+- [validation.js:1-49](file://src/utils/validation.js#L1-L49)
+- [bridge.js:66-79](file://src/api/bridge.js#L66-L79)
 
 ```mermaid
 flowchart TD
-Start(["User clicks Check Deposit"]) --> Validate["Validate Account ID and Chain"]
-Validate --> Valid{"Valid?"}
-Valid --> |No| ShowError["Show Error Message"]
-Valid --> |Yes| CallAPI["Call fetchRecentDeposits"]
+Start(["User fills form"]) --> Validate["Enhanced validation (AccountId, Chain, Address, TxHash)"]
+Validate --> Valid{"All validations pass?"}
+Valid --> |No| ShowError["Show comprehensive error message"]
+Valid --> |Yes| CallAPI["Call notifyDeposit with extra params"]
 CallAPI --> Success{"API Success?"}
 Success --> |No| ShowError
-Success --> |Yes| UpdateList["Update deposits list"]
-UpdateList --> Done(["Render Table"])
-ShowError --> Done
+Success --> |Yes| StartPolling["Start intelligent polling"]
+StartPolling --> CheckStatus["Check deposit status every 5s"]
+CheckStatus --> Complete{"Status COMPLETED/CREDITED?"}
+Complete --> |Yes| StopPolling["Stop polling and show success"]
+Complete --> |No| Failed{"Status FAILED?"}
+Failed --> |Yes| StopPollingError["Stop polling and show error"]
+Failed --> |No| ContinuePolling["Continue polling until timeout"]
+ContinuePolling --> Timeout{"60s timeout reached?"}
+Timeout --> |Yes| ShowTimeout["Show timeout message"]
+Timeout --> |No| CheckStatus
 ```
 
 **Diagram sources**
-- [App.jsx:172-192](file://src/App.jsx#L172-L192)
-- [validation.js:32-37](file://src/utils/validation.js#L32-L37)
-- [bridge.js:48-57](file://src/api/bridge.js#L48-L57)
+- [App.jsx:244-273](file://src/App.jsx#L244-L273)
+- [App.jsx:166-196](file://src/App.jsx#L166-L196)
+- [validation.js:1-49](file://src/utils/validation.js#L1-L49)
+- [bridge.js:66-79](file://src/api/bridge.js#L66-L79)
 
 **Section sources**
-- [App.jsx:53-372](file://src/App.jsx#L53-L372)
+- [App.jsx:97-456](file://src/App.jsx#L97-L456)
 
-### Helper Components Analysis
+### Enhanced Helper Components Analysis
 
-#### StatusBadge
-- Props:
-  - status: String indicating the deposit status.
-- Styling:
-  - Base class: status-badge
-  - Variant classes: status-not-found, status-pending, status-completed, status-unknown
-- Behavior:
-  - Maps status to label and variant class.
-  - Defaults to Unknown label if status is missing.
+#### StatusBadge Component
+- **Props**:
+  - status: String indicating the deposit status with comprehensive mapping
+- **Enhanced Styling**:
+  - Base class: status-badge with consistent sizing
+  - Variant classes: status-not-found (red), status-pending (yellow), status-completed (green), status-unknown (gray)
+- **Behavior**:
+  - Maps status to descriptive labels with proper categorization
+  - Provides fallback handling for unknown statuses
+  - Maintains consistent visual hierarchy
 
 ```mermaid
 classDiagram
 class StatusBadge {
 +props status : string
 +render() JSX.Element
+-config : object
+-label : string
+-className : string
 }
 ```
 
 **Diagram sources**
-- [App.jsx:18-28](file://src/App.jsx#L18-L28)
+- [App.jsx:60-70](file://src/App.jsx#L60-L70)
 
 **Section sources**
-- [App.jsx:18-28](file://src/App.jsx#L18-L28)
+- [App.jsx:60-70](file://src/App.jsx#L60-L70)
 
-#### DepositRow
-- Props:
-  - deposit: Object with amount, decimals, defuse_asset_identifier, created_at, status, chain, tx_hash.
-- Rendering logic:
-  - Formats amount and token identifier.
-  - Displays status via StatusBadge.
-  - Truncates tx_hash with ellipsis and tooltip via title attribute.
-  - Converts timestamps to local time strings.
+#### DepositRow Component
+- **Props**:
+  - deposit: Object with comprehensive field support
+- **Enhanced Rendering logic**:
+  - Amount formatting with decimal precision calculation
+  - Token identifier truncation with ellipsis for long identifiers
+  - Status display via enhanced StatusBadge
+  - Tooltip support for transaction hash truncation
+  - Localized timestamp formatting
+  - Chain label formatting with ID display
 
 ```mermaid
 classDiagram
 class DepositRow {
 +props deposit : object
 +render() JSX.Element
+-amount : string
+-token : string
+-time : string
 }
 ```
 
 **Diagram sources**
-- [App.jsx:30-51](file://src/App.jsx#L30-L51)
+- [App.jsx:72-95](file://src/App.jsx#L72-L95)
 
 **Section sources**
-- [App.jsx:30-51](file://src/App.jsx#L30-L51)
+- [App.jsx:72-95](file://src/App.jsx#L72-L95)
 
-### Form Components and Interaction Patterns
-- Inputs:
-  - Account ID: text input validated by validateAccountId.
-  - Chain: select dropdown populated from supported chains.
-  - Deposit Address: text input validated by validateAddress based on chain prefix.
-  - Transaction Hash: text input validated by validateTxHash.
-- Buttons:
-  - Fetch Address: enabled when account ID and chain are present; shows fetching state during network call.
-  - Check Deposit: enabled when account ID and chain are present; shows checking state while loading.
-  - Fix Deposit: enabled only when fix is allowed and all required fields are filled; triggers notifyDeposit and starts polling.
-- Messages:
-  - Error and success messages are shown conditionally and cleared before each operation.
+### Enhanced Form Components and Interaction Patterns
+- **Inputs**:
+  - Account ID: Text input with basic validation
+  - Chain: Select dropdown with 48+ network support and custom labels
+  - Deposit Address: Text input with network-specific validation
+  - Transaction Hash: Text input with required field validation
+  - NEAR Sender Account: Specialized input for NEAR network deposits
+  - Stellar Memo: Specialized input with 32-character limit for Stellar deposits
+- **Buttons**:
+  - Fetch Address: Enabled with comprehensive validation, shows loading state
+  - Check Deposit: Enabled with validation, shows loading state during API calls
+  - Fix Deposit: Dynamically enabled/disabled based on fix eligibility
+- **Messages**:
+  - Comprehensive error and success messages with distinct styling
+  - Real-time feedback for all user actions
+  - Timeout messages for polling operations
 
 ```mermaid
 flowchart TD
 A["User fills form"] --> B["Change handlers update state"]
 B --> C{"Form valid?"}
-C --> |No| D["Show validation error"]
-C --> |Yes| E["Invoke handler (Fetch/Check/Fix)"]
-E --> F["API call"]
-F --> G{"Success?"}
-G --> |No| H["Show error message"]
-G --> |Yes| I["Show success message"]
+C --> |No| D["Show validation error with specific message"]
+C --> |Yes| E["Invoke enhanced handler (Fetch/Check/Fix)"]
+E --> F["Advanced validation (network-specific)"]
+F --> G{"Network-specific validation pass?"}
+G --> |No| H["Show network-specific error"]
+G --> |Yes| I["API call with extra parameters"]
+I --> J{"Success?"}
+J --> |No| K["Show comprehensive error message"]
+J --> |Yes| L["Show success message with feedback"]
 ```
 
 **Diagram sources**
-- [App.jsx:240-293](file://src/App.jsx#L240-L293)
+- [App.jsx:244-273](file://src/App.jsx#L244-L273)
 - [validation.js:1-49](file://src/utils/validation.js#L1-L49)
-- [bridge.js:41-65](file://src/api/bridge.js#L41-L65)
+- [bridge.js:66-79](file://src/api/bridge.js#L66-L79)
 
 **Section sources**
-- [App.jsx:234-330](file://src/App.jsx#L234-L330)
+- [App.jsx:292-448](file://src/App.jsx#L292-L448)
 - [validation.js:1-49](file://src/utils/validation.js#L1-L49)
 
-### Card-Based Layout and Responsive Design
-- Card-based layout:
-  - Each major section is wrapped in a card with rounded corners, border, and padding.
-  - Consistent typography and spacing for headings and form groups.
-- Responsive design:
-  - Media query at 600px adjusts padding, stacks input rows and action buttons vertically, and reduces table font sizes.
-- Accessibility considerations:
-  - Proper labels associated with inputs via htmlFor.
-  - Focus states for inputs and buttons.
-  - Disabled states for buttons when operations are not permitted.
+### Enhanced Card-Based Layout and Responsive Design
+- **Card-based layout**:
+  - Comprehensive card system with rounded corners and consistent spacing
+  - Distinct styling for form cards, status cards, and action cards
+  - Responsive grid system with flexible layouts
+- **Enhanced responsive design**:
+  - Mobile-first approach with 600px breakpoint
+  - Flexible input arrangements with stacked layouts on small screens
+  - Adaptive button layouts with full-width options
+  - Optimized table layouts with horizontal scrolling
+- **Accessibility considerations**:
+  - Proper form labeling with htmlFor attributes
+  - Focus management for interactive elements
+  - Color contrast compliance for status indicators
+  - Screen reader friendly status descriptions
 
 ```mermaid
 graph TB
-App["App.jsx"] --> Cards["Cards (.card)"]
-Cards --> Form[".form-group"]
-Cards --> Actions[".actions-card"]
-Cards --> Status[".status-card"]
-App --> Table["Results Table"]
-App --> Messages[".message"]
-App --> Styles["App.css"]
+App["App.jsx"] --> Cards["Enhanced Cards (.card)"]
+Cards --> Form[".form-group with enhanced styling"]
+Cards --> Actions[".actions-card with adaptive layout"]
+Cards --> Status[".status-card with real-time updates"]
+App --> Table["Responsive Results Table"]
+App --> Messages[".message with enhanced feedback"]
+App --> ErrorBoundary["ErrorBoundary for resilience"]
+App --> Styles["App.css with comprehensive styling"]
 Styles --> Responsive["@media (max-width: 600px)"]
 ```
 
 **Diagram sources**
-- [App.jsx:226-371](file://src/App.jsx#L226-L371)
-- [App.css:14-57](file://src/App.css#L14-L57)
-- [App.css:278-302](file://src/App.css#L278-L302)
+- [App.jsx:283-455](file://src/App.jsx#L283-L455)
+- [App.css:14-309](file://src/App.css#L14-L309)
 
 **Section sources**
-- [App.jsx:226-371](file://src/App.jsx#L226-L371)
-- [App.css:1-303](file://src/App.css#L1-L303)
+- [App.jsx:283-455](file://src/App.jsx#L283-L455)
+- [App.css:1-309](file://src/App.css#L1-L309)
 
-### Component Communication and Prop Drilling
-- App component passes data down:
-  - StatusBadge receives status prop.
-  - DepositRow receives deposit prop.
-- No prop drilling beyond immediate children; helpers are simple presentational components.
-- State synchronization:
-  - Polling updates deposits list, which re-renders the table and recalculates overallStatus and fixAllowed.
-  - Success and error messages are cleared before each operation to avoid stale feedback.
+### Enhanced Component Communication and Prop Drilling
+- **Data flow patterns**:
+  - App component passes status to StatusBadge via props
+  - App component passes deposit data to DepositRow via props
+  - ErrorBoundary wraps entire application for comprehensive error handling
+- **State synchronization**:
+  - Polling updates deposits list with automatic UI updates
+  - Success and error messages are cleared before each operation
+  - Chain selection triggers conditional input rendering
+- **Event handling**:
+  - Callback functions are memoized to prevent unnecessary re-renders
+  - Form validation prevents invalid API calls
+  - Loading states provide user feedback during asynchronous operations
 
 **Section sources**
-- [App.jsx:30-51](file://src/App.jsx#L30-L51)
-- [App.jsx:18-28](file://src/App.jsx#L18-L28)
-- [App.jsx:218-224](file://src/App.jsx#L218-L224)
+- [App.jsx:60-95](file://src/App.jsx#L60-L95)
+- [App.jsx:458-489](file://src/App.jsx#L458-L489)
+- [App.jsx:153-196](file://src/App.jsx#L153-L196)
 
 ## Dependency Analysis
-- Internal dependencies:
-  - App.jsx depends on validation.js and bridge.js for business logic and API calls.
-  - App.jsx renders StatusBadge and DepositRow helpers.
-- External dependencies:
-  - React and ReactDOM for rendering.
-  - Vite plugin for React for development and build.
-- Entry point:
-  - main.jsx renders App inside StrictMode and applies App.css.
+- **Internal dependencies**:
+  - App.jsx depends on validation.js for comprehensive input validation
+  - App.jsx depends on bridge.js for robust API communication
+  - App.jsx renders StatusBadge, DepositRow, and ErrorBoundary components
+- **External dependencies**:
+  - React 18.3.1 for component framework and hooks
+  - ReactDOM 18.3.1 for client-side rendering
+  - Vite 6.0.0 with @vitejs/plugin-react for development and build
+- **Entry point integration**:
+  - main.jsx renders App wrapped in ErrorBoundary with StrictMode
+  - Applies comprehensive CSS styling globally
 
 ```mermaid
 graph LR
 Main["main.jsx"] --> App["App.jsx"]
+Main --> ErrorBoundary["ErrorBoundary.jsx"]
 App --> Validation["validation.js"]
 App --> Bridge["bridge.js"]
 App --> Styles["App.css"]
+ErrorBoundary --> App
+Bridge --> RPC["RPC Endpoint"]
+Validation --> App
 ```
 
 **Diagram sources**
-- [main.jsx:6-10](file://src/main.jsx#L6-L10)
-- [App.jsx:1-14](file://src/App.jsx#L1-L14)
+- [main.jsx:6-12](file://src/main.jsx#L6-L12)
+- [App.jsx:1-456](file://src/App.jsx#L1-L456)
 - [validation.js:1-49](file://src/utils/validation.js#L1-L49)
-- [bridge.js:1-72](file://src/api/bridge.js#L1-L72)
-- [App.css:1-303](file://src/App.css#L1-L303)
+- [bridge.js:1-86](file://src/api/bridge.js#L1-L86)
+- [App.css:1-309](file://src/App.css#L1-L309)
 
 **Section sources**
-- [main.jsx:1-11](file://src/main.jsx#L1-L11)
-- [package.json:11-18](file://package.json#L11-L18)
+- [main.jsx:1-13](file://src/main.jsx#L1-L13)
+- [package.json:11-20](file://package.json#L11-L20)
 - [vite.config.js:1-7](file://vite.config.js#L1-L7)
 
 ## Performance Considerations
-- Polling interval and timeout:
-  - Polling runs every 5 seconds with a 60-second timeout to avoid indefinite loops.
-- Memoization:
-  - stopPolling and startPolling are memoized to prevent unnecessary re-renders.
-- Conditional rendering:
-  - Chains and results are only rendered when data is available, reducing DOM overhead.
-- Network efficiency:
-  - API calls are made only when validations pass, minimizing unnecessary requests.
-
-[No sources needed since this section provides general guidance]
+- **Enhanced polling optimization**:
+  - 5-second polling interval with 60-second timeout prevents resource exhaustion
+  - Memoized callback functions prevent unnecessary re-renders
+  - Efficient Set-based chain deduplication reduces memory usage
+- **Smart resource management**:
+  - Automatic timer cleanup prevents memory leaks
+  - Conditional rendering reduces DOM complexity
+  - Request timeout handling prevents hanging operations
+- **Network efficiency**:
+  - Comprehensive validation prevents invalid API calls
+  - Batched operations reduce network overhead
+  - Error boundaries prevent cascading failures
 
 ## Troubleshooting Guide
-- Common issues and remedies:
-  - Missing account ID or chain: Ensure both are provided before invoking handlers.
-  - Invalid deposit address: Verify address format according to chain prefix (EVM, TRON, BTC).
-  - RPC errors: Inspect network connectivity and endpoint availability.
-  - Stuck polling: Timeout will stop polling after 60 seconds; manual refresh recommended.
-  - Disabled buttons: Buttons are disabled when inputs are invalid or when fix is not allowed.
-- Error and success messages:
-  - Clear messages before each operation to avoid confusion.
-  - Use distinct classes for error and success styling to aid visual feedback.
+- **Common issues and remedies**:
+  - Missing account ID or chain: Comprehensive validation provides specific error messages
+  - Invalid deposit address: Network-specific validation with detailed error descriptions
+  - RPC timeout errors: Request timeout handling with automatic retry suggestions
+  - Stuck polling: 60-second timeout with automatic cleanup
+  - Disabled buttons: Dynamic enable/disable logic based on form validity
+- **Enhanced error handling**:
+  - ErrorBoundary provides graceful degradation
+  - Comprehensive error messages aid debugging
+  - Automatic state cleanup prevents inconsistent states
+- **Network troubleshooting**:
+  - Request timeout at 30 seconds prevents hanging operations
+  - Detailed error messages from RPC endpoint
+  - Automatic polling cleanup on component unmount
 
 **Section sources**
-- [App.jsx:148-216](file://src/App.jsx#L148-L216)
+- [App.jsx:198-273](file://src/App.jsx#L198-L273)
 - [validation.js:1-49](file://src/utils/validation.js#L1-L49)
-- [bridge.js:20-31](file://src/api/bridge.js#L20-L31)
+- [bridge.js:15-38](file://src/api/bridge.js#L15-L38)
 
 ## Conclusion
-Bridge Fixer’s App component demonstrates a clean, modular React architecture with explicit state management, robust validation, and a responsive card-based UI. Helper components encapsulate presentation concerns, while the API and validation modules isolate cross-cutting concerns. The polling mechanism, combined with clear user feedback and accessibility-friendly markup, provides a reliable user experience for deposit recovery workflows.
+Bridge Fixer's enhanced App component demonstrates a sophisticated, production-ready React architecture with comprehensive state management, robust validation, intelligent polling mechanisms, and resilient error handling. The migration to a 489-line implementation showcases modern development practices including enhanced component composition, sophisticated error boundaries, and comprehensive user experience features. The application provides a reliable, accessible, and scalable solution for deposit recovery across 48+ blockchain networks with professional-grade error handling and user feedback systems.

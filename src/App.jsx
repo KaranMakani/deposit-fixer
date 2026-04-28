@@ -12,7 +12,7 @@ import {
   canFixDeposit,
 } from './utils/validation';
 
-const POLL_INTERVAL = 5000;
+const POLL_INTERVAL = 10000;
 const POLL_TIMEOUT = 60000;
 
 const CHAIN_NAMES = {
@@ -385,7 +385,7 @@ export default function App() {
               <span>Status:</span>
               <StatusBadge status={overallStatus} />
             </div>
-            {polling && <p className="polling-text">Auto-checking status (every 5s)...</p>}
+            {polling && <p className="polling-text">Auto-checking status (every 10s, max 6 checks)...</p>}
           </section>
         )}
 
